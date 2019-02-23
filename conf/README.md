@@ -5,9 +5,7 @@ This directory contains the necessary hooks, scripts and configuration files in 
 - fetch a key and decrypt it from the [Enceeper service](https://www.enceeper.com/)
 - mount via cryptroot the root filesystem using the above decrypted key
 
-```
-Warning: Before starting we recommend to have a working encrypted system that is unlocked via a passphrase to avoid misconfigurations and locking yourself out of your system.
-```
+> Warning: Before starting we recommend to have a working encrypted system that is unlocked via a passphrase to avoid misconfigurations and locking yourself out of your system.
 
 ## Required reading
 
