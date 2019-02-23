@@ -57,7 +57,7 @@ get_slot() {
 
         # We will stop retrying after expiration
         NOW=`$CMD_DATE +%s`
-        if [ $EXP -gt $NOW ]; then
+        if [ $EXP -lt $NOW ]; then
           return 2
         fi
       done
