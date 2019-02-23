@@ -1,0 +1,3 @@
+*.o
+/aes-ccm/decryptor_nettle
+/aes-ccm/decryptor_openssl

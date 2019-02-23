@@ -1,0 +1,56 @@
+#!/bin/sh
+
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Script to extract the network interface name and type (wired or wireless)
+#
+# Copyright (C) 2019 Vassilis Poursalidis (poursal@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program. If
+# not, see <https://www.gnu.org/licenses/>.
+#
+
+NET_WIRED=0
+NET_WIRELESS=0
+
+# Grab device entry from ip option
+NET_INTERFACE=${IP#*:*:*:*:*:*}
+
+if [ "${NET_INTERFACE}" != "${IP}" ]; then
+  NET_INTERFACE=${NET_INTERFACE%%:*}
+
+  # Check if this a wired or wireless interface
+  NET_INTERFACE_PREFIX=`echo $NET_INTERFACE | cut -c1-2`
+  if [ $NET_INTERFACE_PREFIX == "en" ]; then
+    NET_WIRED=1
+  fi
+  if [ $NET_INTERFACE_PREFIX == "wl" ]; then
+    NET_WIRELESS=1
+  fi
+
+  # Fallback to wired if both NET_ vars are 0
+  if [ $NET_WIRED -eq 0 ] && [ $NET_WIRELESS -eq 0 ]; then
+    NET_WIRED=1
+  fi
+else
+  NET_INTERFACE=
+fi
+
+configure_dns() {
+  DNS_SERVERS=`ipconfig $NET_INTERFACE | grep "dns"`
+  IP1=`echo $DNS_SERVERS | awk '{print $5}'`
+  IP2=`echo $DNS_SERVERS | awk '{print $8}'`
+
+  touch /etc/resolv.conf
+  echo "nameserver $IP1" >> /etc/resolv.conf
+  echo "nameserver $IP2" >> /etc/resolv.conf
+}

@@ -1,0 +1,73 @@
+#!/bin/sh
+
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Hook script to prepare the Initramfs for networking and fetching a key from the Enceeper service
+#
+# Copyright (C) 2019 Vassilis Poursalidis (poursal@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program. If
+# not, see <https://www.gnu.org/licenses/>.
+#
+
+set -e
+
+PREREQ="cryptroot"
+prereqs()
+{
+  echo "$PREREQ"
+}
+
+case $1 in
+  prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+# Copy wget and CA certificates to support TLS connections
+copy_exec /usr/bin/wget /bin/wgetf
+copy_file config /etc/ssl/certs/ca-certificates.crt /etc/ca-certificates.crt
+
+# CHANGE HERE for your correct modules
+# Copy wireless tools (uncomment if needed)
+# manual_add_modules ath9k_htc
+# copy_exec /sbin/wpa_supplicant
+# copy_exec /sbin/wpa_cli
+# copy_file config /etc/initramfs-tools/wpa_supplicant.conf /etc/wpa_supplicant.conf
+
+# Copy needed binaries
+copy_exec /usr/bin/dirname
+copy_exec /usr/bin/head
+copy_exec /usr/bin/base64
+copy_exec /usr/bin/hexdump
+copy_exec /usr/bin/xargs
+copy_exec /usr/bin/xxd
+copy_exec /usr/bin/shred
+
+copy_exec /usr/local/enceeper/bin/decryptor /enceeper/bin/decryptor
+copy_exec /usr/local/enceeper/bin/scrypt /enceeper/bin/scrypt
+copy_file binary /usr/local/enceeper/bin/JSON.sh /enceeper/bin/JSON.sh
+
+# Copy enceeper scripts
+copy_file binary /usr/local/enceeper/enceeper.sh /enceeper/enceeper.sh
+copy_file binary /usr/local/enceeper/lib/params.sh /enceeper/lib/params.sh
+copy_file binary /usr/local/enceeper/lib/util.sh /enceeper/lib/util.sh
+copy_file binary /usr/local/enceeper/lib/network.sh /enceeper/lib/network.sh
+# copy_file binary /usr/local/enceeper/test.sh /enceeper/test.sh
+
+copy_file config /etc/enceeper.conf /etc/enceeper.conf
+
+# Add enceeper script in crypttab
+sed -i 's|$|,keyscript=/enceeper/enceeper.sh|' "${DESTDIR}/conf/conf.d/cryptroot"

@@ -6,4 +6,4 @@
 
 ## Important note
 
-The scrypt and decryptor are precompiled binaries for Ubuntu (or any other x86-64 Linux system)
+The scrypt and decryptor are precompiled binaries for x86-64 GNU/Linux systems

@@ -1,0 +1,8 @@
+# Copy your key details from the Enceeper app
+
+ENCEEPER_SLOT_ID="<The slot Id from the Enceeper App>"
+
+# Make sure that you have normalized the password before using it here.
+#  https://en.wikipedia.org/wiki/Unicode_equivalence
+#  http://unicode.org/reports/tr15/
+ENCEEPER_PASSWORD="<The key provided during slot creation>"
