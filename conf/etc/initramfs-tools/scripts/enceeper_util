@@ -46,11 +46,14 @@ else
 fi
 
 configure_dns() {
-  DNS_SERVERS=`ipconfig $NET_INTERFACE | grep "dns"`
-  IP1=`echo $DNS_SERVERS | awk '{print $5}'`
-  IP2=`echo $DNS_SERVERS | awk '{print $8}'`
+  if [ -f "/run/net-$NET_INTERFACE.conf" ]; then
+    # TODO Check/fix this for IPv6
+    DNS_SERVERS=`ipconfig -t 4 $NET_INTERFACE | grep "dns"`
+    IP1=`echo $DNS_SERVERS | awk '{print $5}'`
+    IP2=`echo $DNS_SERVERS | awk '{print $8}'`
 
-  touch /etc/resolv.conf
-  echo "nameserver $IP1" >> /etc/resolv.conf
-  echo "nameserver $IP2" >> /etc/resolv.conf
+    touch /etc/resolv.conf
+    echo "nameserver $IP1" >> /etc/resolv.conf
+    echo "nameserver $IP2" >> /etc/resolv.conf
+  fi
 }

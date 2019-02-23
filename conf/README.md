@@ -59,10 +59,10 @@ ethtool -i wlXXX | grep driver
 Regardless of wired or wireless connection you will need to edit the file /etc/default/grub and add/edit the following line:
 
 ```
-GRUB_CMDLINE_LINUX="ip=:::::enp0s3:on panic=300"
+GRUB_CMDLINE_LINUX="ip=:::::enp0s3:on panic=10"
 ```
 
-Where enp0s3 is the name of your interface and panic is the number of seconds for Initramfs to wait before rebooting the system.
+Where enp0s3 is the name of your interface and panic is the number of seconds to wait before rebooting the system in case of panic.
 
 Backup your current Initramfs and update:
 
