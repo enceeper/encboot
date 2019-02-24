@@ -70,4 +70,4 @@ copy_file binary /usr/local/enceeper/lib/network.sh /enceeper/lib/network.sh
 copy_file config /etc/enceeper.conf /etc/enceeper.conf
 
 # Add enceeper script in crypttab
-sed -i 's|$|,keyscript=/enceeper/enceeper.sh|' "${DESTDIR}/conf/conf.d/cryptroot"
+sed -i 's|$|,tries=1,keyscript=/enceeper/enceeper.sh|' "${DESTDIR}/conf/conf.d/cryptroot"
