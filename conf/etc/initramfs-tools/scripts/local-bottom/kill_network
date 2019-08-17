@@ -40,3 +40,5 @@ if [ $NET_WIRELESS -eq 1 ] ; then
   log_success_msg "Killing wpa_supplicant so the system takes over later."
   kill `cat /run/initram-wpa_supplicant.pid`
 fi
+
+ip addr flush dev $NET_INTERFACE
